@@ -10,55 +10,116 @@ namespace VideoLibrary
 {
     class Database
     {
+        private static string dbPath = "Data Source = " + Environment.CurrentDirectory + "/library.db";
+        private static SQLiteConnection con = new SQLiteConnection(dbPath);
+        private static Database database = new Database();
+
         private Database()
         {
-            //数据库文件存储路径,(Environment.CurrentDirectory:为当前工作目录的完全路径)
-            string dbPath = "Data Source =" + Environment.CurrentDirectory + "/test.db";
-            //创建连接数据库实例，指定文件位置 
-            SQLiteConnection con = new SQLiteConnection(dbPath);
-            //打开数据库，若文件不存在会自动创建 
-            con.Open();
-            //建表语句 
-            string sql = "CREATE TABLE IF NOT EXISTS student(id integer, name varchar(20), sex varchar(2));";
-            //创建sql执行指令对象
-            SQLiteCommand com = new SQLiteCommand(sql, con);
-            //如果不带参数时, 使用一下语句赋值
-            //com.CommandText = sql;
-            //com.Connection = con;
-            //执行sql指令创建建数据表,如果表不存在，创建数据表 
-            com.ExecuteNonQuery();
+            Database.Init();
+        }
 
-            //给表添加数据
-            //1. 使用sql语句逐行添加
-            com.CommandText = "INSERT INTO student VALUES(1, '小红', '男')";
-            com.ExecuteNonQuery();
-            com.CommandText = "INSERT INTO student VALUES(2, '小李', '女')";
-            com.ExecuteNonQuery();
-            com.CommandText = "INSERT INTO student VALUES(3, '小明', '男')";
-            com.ExecuteNonQuery();
-            //2. 使用事务添加
-            //实例化一个事务对象
-            SQLiteTransaction tran = con.BeginTransaction();
-            //把事务对象赋值给com的transaction属性
-            com.Transaction = tran;
-            //设置带参数sql语句
-            com.CommandText = "INSERT INTO student VALUES(@id, @name, @sex)";
-            for (int i = 0; i < 10; i++)
+
+        private static void Init()
+        {
+            if (!tableIsExists("User"))
             {
-                //添加参数
-                com.Parameters.AddRange(new[] {//添加参数 
-               new SQLiteParameter("@id", i + 1),
-               new SQLiteParameter("@name", "test" + i),
-               new SQLiteParameter("@sex", i % 3 == 0 ? "男" : "女")
-           });
-                //执行添加
+                SQLiteCommand com = new SQLiteCommand();
+                com.CommandText = " CREATE TABLE IF NOT EXISTS User ([Id] integer(4) PRIMARY KEY, [Username] varchar(20), [Password] varchar(20));";
+                com.Connection = con;
+                con.Open();
                 com.ExecuteNonQuery();
+                con.Close();
             }
-            //提交事务
-            tran.Commit();
-            //关闭数据库
-            con.Close();
+
+            if (tableIsNull("User"))
+            {
+                SQLiteCommand com = new SQLiteCommand();
+                com.CommandText = "INSERT INTO User VALUES (null , 'admin', 'admin');";
+                com.Connection = con;
+                con.Open();
+                com.ExecuteNonQuery();
+                con.Close();
+            }
+
 
         }
+
+        private static Boolean tableIsExists(string tableName)
+        {
+
+            SQLiteCommand com = new SQLiteCommand();
+            com.CommandText = "SELECT COUNT(*) FROM sqlite_master where type = 'table' and name = '" + tableName + "'";
+            com.Connection = con;
+            con.Open();
+            int count = Convert.ToInt32(com.ExecuteScalar());
+            con.Close();
+            if (count == 0)
+            {
+                return false;
+            }
+            else if (count == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static Boolean tableIsNull(string tableName)
+        {
+
+            SQLiteCommand com = new SQLiteCommand();
+            com.CommandText = "SELECT COUNT(*) FROM " + tableName + "";
+            com.Connection = con;
+            con.Open();
+            int count = Convert.ToInt32(com.ExecuteScalar());
+            con.Close();
+            if (count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public static Database getInstance()
+        {
+            return database;
+
+        }
+
+        public Boolean login(string username, string password)
+        {
+
+            SQLiteCommand com = new SQLiteCommand();
+            com.CommandText = "SELECT COUNT(*) FROM User WHERE [Username] = '" + username + "' AND [Password] = '" + password + "'";
+            com.Connection = con;
+            con.Open();
+            int count = Convert.ToInt32(com.ExecuteScalar());
+            con.Close();
+            if (count == 0)
+            {
+                return false;
+            }
+            else if (count == 1)
+            {
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+
+
     }
 }

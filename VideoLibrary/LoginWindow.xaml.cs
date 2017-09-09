@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,8 +29,12 @@ namespace VideoLibrary
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(UsernameTextBox.Text);
-            MessageBox.Show(PasswordTextBox.Text);
+
+            Database database = Database.getInstance();
+            string username = UsernameTextBox.Text;
+            string password = PasswordTextBox.Text;
+            MessageBox.Show(database.login(username, password).ToString());
+
         }
     }
 }
