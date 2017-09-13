@@ -31,7 +31,10 @@ namespace VideoLibrary
             string password = PasswordTextBox.Text;
             if (database.login(username, password))
             {
-
+                Window libraryWindow = new LibraryWindow();
+                Application.Current.MainWindow = libraryWindow;
+                this.Close();
+                libraryWindow.Show();
             }
             else
             {
