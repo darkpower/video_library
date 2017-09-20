@@ -24,7 +24,7 @@ namespace VideoLibrary
             InitializeComponent();
         }
 
-        private void importButton_Click(object sender, RoutedEventArgs e)
+        private void CreateCompanyButton_Click(object sender, RoutedEventArgs e)
         {
 
         }

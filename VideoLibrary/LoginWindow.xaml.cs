@@ -26,7 +26,7 @@ namespace VideoLibrary
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-            Database database = Database.getInstance();
+            MessageBox.Show(database.test());
             string username = UsernameTextBox.Text;
             string password = PasswordTextBox.Text;
             if (database.login(username, password))

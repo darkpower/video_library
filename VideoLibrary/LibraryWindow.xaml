@@ -12,7 +12,8 @@
         <Frame x:Name="ContentFrame" Content="ContentFrame" HorizontalAlignment="Left" Height="819" Margin="100,50,0,0" VerticalAlignment="Top" Width="1332" BorderThickness="1" BorderBrush="Black"/>
         <ToolBarTray HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="1432">
             <ToolBar x:Name="toolBar" Margin="0,0,-1432,-50">
-                <Button x:Name="importButton" Content="导入" Height="45" VerticalAlignment="Top" Width="75" Click="importButton_Click"/>
+                <Button x:Name="CreateCompanyButton" Content="新建影视公司" Height="50" VerticalAlignment="Top" Width="100" Margin="0,0,0,-5" Click="CreateCompanyButton_Click"/>
+                <Button Content="Button" Height="50" VerticalAlignment="Bottom" Width="75" Margin="0,0,0,-5"/>
 
             </ToolBar>
         </ToolBarTray>
